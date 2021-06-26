@@ -1,26 +1,69 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { User } from './entities/user.entity';
+import { hash } from 'bcryptjs';
 
 @Injectable()
 export class UsersService {
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  constructor(
+    @InjectRepository(User)
+    private usersRepository: Repository<User>,
+  ) {}
+
+  async create({ name, email, password }: CreateUserDto): Promise<void> {
+    const userAlreadyExists = await this.findByEmail(email);
+
+    if (userAlreadyExists) throw new Error('User already exists!');
+
+    const passwordHash = await hash(password, 8);
+
+    const user = this.usersRepository.create({
+      name,
+      email,
+      password: passwordHash,
+    });
+
+    await this.usersRepository.save(user);
   }
 
-  findAll() {
-    return `This action returns all users`;
+  async findByEmail(email: string): Promise<User> {
+    const user = await this.usersRepository.findOne({ email });
+    return user;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findAll(): Promise<User[]> {
+    const allUsers = await this.usersRepository.find();
+    return allUsers;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async findOne(id: number): Promise<User> {
+    const user = await this.usersRepository.findOne(id);
+    return user;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async update(
+    id: number,
+    { name, email, password }: UpdateUserDto,
+  ): Promise<void> {
+    const userAlreadyExists = await this.findByEmail(email);
+
+    if (userAlreadyExists && userAlreadyExists.id !== id) {
+      throw new Error('Another user already use this email!');
+    }
+
+    const passwordHash = await hash(password, 8);
+
+    await this.usersRepository.update(id, {
+      name,
+      email,
+      password: passwordHash,
+    });
+  }
+
+  async remove(id: number): Promise<void> {
+    await this.usersRepository.delete(id);
   }
 }
