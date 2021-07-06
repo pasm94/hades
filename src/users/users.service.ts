@@ -35,7 +35,9 @@ export class UsersService {
   }
 
   async findAll(): Promise<User[]> {
-    const allUsers = await this.usersRepository.find();
+    const allUsers = await this.usersRepository.find({
+      order: { id: 'DESC' },
+    });
     return allUsers;
   }
 
