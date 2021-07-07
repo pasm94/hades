@@ -6,6 +6,13 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { hash } from 'bcryptjs';
 
+export interface UserData {
+  id: number;
+  name: string;
+  email: string;
+  created_at: Date;
+}
+
 @Injectable()
 export class UsersService {
   constructor(
@@ -38,6 +45,7 @@ export class UsersService {
     const allUsers = await this.usersRepository.find({
       order: { id: 'DESC' },
     });
+
     return allUsers;
   }
 
