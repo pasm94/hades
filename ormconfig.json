@@ -5,7 +5,7 @@
   "username": "postgres",
   "password": "docker",
   "database": "postgres",
-  "migrations": ["./src/database/migrations/*.ts'"],
+  "migrations": ["./src/database/migrations/*.ts"],
   "entities": ["dist/**/*.entity{.ts,.js}"],
   "cli": {
     "migrationsDir": "./src/database/migrations"
