@@ -1,10 +1,10 @@
 // import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
-// export class CreateUsers1625624128834 implements MigrationInterface {
+// export class CreateProjects1625707677532 implements MigrationInterface {
 //   public async up(queryRunner: QueryRunner): Promise<void> {
 //     await queryRunner.createTable(
 //       new Table({
-//         name: 'users',
+//         name: 'projects',
 //         columns: [
 //           {
 //             name: 'id',
@@ -18,12 +18,11 @@
 //             type: 'varchar',
 //           },
 //           {
-//             name: 'email',
+//             name: 'status',
 //             type: 'varchar',
-//             isUnique: true,
 //           },
 //           {
-//             name: 'password',
+//             name: 'description',
 //             type: 'varchar',
 //           },
 //           {
@@ -37,6 +36,6 @@
 //   }
 
 //   public async down(queryRunner: QueryRunner): Promise<void> {
-//     await queryRunner.dropTable('users');
+//     await queryRunner.dropTable('projects');
 //   }
 // }

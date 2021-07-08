@@ -3,9 +3,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Connection } from 'typeorm';
 import { UsersModule } from './users/users.module';
 // import { DatabaseModule } from './database/database.module';
+import { ProjectsModule } from './projects/projects.module';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(), UsersModule],
+  imports: [TypeOrmModule.forRoot(), UsersModule, ProjectsModule],
 })
 export class AppModule {
   constructor(private connection: Connection) {}

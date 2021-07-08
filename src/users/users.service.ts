@@ -6,13 +6,6 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { hash } from 'bcryptjs';
 
-export interface UserData {
-  id: number;
-  name: string;
-  email: string;
-  created_at: Date;
-}
-
 @Injectable()
 export class UsersService {
   constructor(
@@ -73,7 +66,7 @@ export class UsersService {
     });
   }
 
-  async remove(id: number): Promise<void> {
-    await this.usersRepository.delete(id);
+  remove(id: number): void {
+    this.usersRepository.delete(id);
   }
 }
