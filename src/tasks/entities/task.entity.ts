@@ -20,14 +20,14 @@ export class Task {
   @Column()
   status: 'to do' | 'doing' | 'done';
 
-  @CreateDateColumn()
-  prevision_date: Date;
+  @Column('timestamp')
+  prevision_date?: Date;
 
-  @CreateDateColumn()
-  started: Date;
+  @Column('timestamp')
+  started?: Date;
 
-  @CreateDateColumn()
-  finished: Date;
+  @Column('timestamp')
+  finished?: Date;
 
   @CreateDateColumn()
   created_at: Date;
