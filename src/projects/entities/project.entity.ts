@@ -14,7 +14,7 @@ export class Project {
   name: string;
 
   @Column()
-  status: string;
+  status: 'to do' | 'doing' | 'done';
 
   @Column()
   description: string;

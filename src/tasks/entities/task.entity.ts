@@ -18,7 +18,7 @@ export class Task {
   name: string;
 
   @Column()
-  status: string;
+  status: 'to do' | 'doing' | 'done';
 
   @CreateDateColumn()
   prevision_date: Date;
