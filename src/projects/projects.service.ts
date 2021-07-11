@@ -39,12 +39,6 @@ export class ProjectsService {
     id: number,
     { status, description, name }: UpdateProjectDto,
   ): Promise<void> {
-    const projectAlreadyExists = await this.findByName(name);
-
-    if (projectAlreadyExists && projectAlreadyExists.id !== id) {
-      throw new Error('Another user already use this email!');
-    }
-
     await this.projectsRepository.update(id, {
       name,
       status,
