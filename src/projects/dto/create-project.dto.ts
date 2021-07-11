@@ -1,5 +1,5 @@
 export class CreateProjectDto {
   name: string;
-  status: string;
+  status: 'to do' | 'doing' | 'done';
   description: string;
 }
