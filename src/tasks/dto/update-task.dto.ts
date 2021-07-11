@@ -3,7 +3,7 @@ import { CreateTaskDto } from './create-task.dto';
 
 export class UpdateTaskDto extends PartialType(CreateTaskDto) {
   name: string;
-  status: string;
+  status: 'to do' | 'doing' | 'done';
   prevision_date: Date;
   started: Date;
   finished: Date;
