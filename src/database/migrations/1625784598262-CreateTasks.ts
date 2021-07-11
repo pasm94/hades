@@ -33,12 +33,12 @@ export class CreateTasks1625784598262 implements MigrationInterface {
           },
           {
             name: 'started',
-            type: 'timestamp',
+            type: 'timestamp with time zone',
             isNullable: true,
           },
           {
             name: 'finished',
-            type: 'timestamp',
+            type: 'timestamp with time zone',
             isNullable: true,
           },
           {
@@ -58,6 +58,7 @@ export class CreateTasks1625784598262 implements MigrationInterface {
           },
         ],
       }),
+      true,
     );
 
     await queryRunner.createForeignKey(

@@ -1,3 +1,4 @@
+import { timeStamp } from 'console';
 import { Project } from 'src/projects/entities/project.entity';
 import { User } from 'src/users/entities/user.entity';
 import {
@@ -20,13 +21,13 @@ export class Task {
   @Column()
   status: 'to do' | 'doing' | 'done';
 
-  @CreateDateColumn()
+  @Column({ type: 'date', nullable: true })
   prevision_date?: Date;
 
-  @Column('timestamp')
+  @Column({ type: 'timestamp with time zone', nullable: true })
   started?: Date;
 
-  @Column('timestamp')
+  @Column({ type: 'timestamp with time zone', nullable: true })
   finished?: Date;
 
   @CreateDateColumn()
