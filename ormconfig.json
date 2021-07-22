@@ -2,9 +2,9 @@
   "type": "postgres",
   "port": 5432,
   "host": "localhost",
-  "username": "postgres",
+  "username": "paulo",
   "password": "docker",
-  "database": "postgres",
+  "database": "hades_db",
   "entities": ["dist/**/*.entity{.ts,.js}"],
   "migrations": ["./src/database/migrations/*.ts"],
   "cli": {

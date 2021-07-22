@@ -5,4 +5,6 @@ import { ModulesModule } from './modules/modules.module';
 @Module({
   imports: [DatabaseModule, ModulesModule],
 })
-export class AppModule {}
+
+export class AppModule { }
+
