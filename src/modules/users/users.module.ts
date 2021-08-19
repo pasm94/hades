@@ -16,7 +16,10 @@ export class UsersModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(EnsureAuthenticatedMiddleware)
-      .exclude({ path: 'users/auth', method: RequestMethod.POST })
+      .exclude(
+        { path: 'users', method: RequestMethod.POST },
+        { path: 'users/auth', method: RequestMethod.POST },
+      )
       .forRoutes(UsersController);
   }
 }
