@@ -12,6 +12,14 @@ export class TasksService {
     private taskRepository: Repository<Task>,
   ) {}
 
+  // TO DO
+  // in create method
+  // [ ] prevision_date, started and finished fields does not need to be filled out
+  // [ ] validate if the foreign keys are valid
+
+  // in update method
+  // [ ] all field must be optional, update only submitted fields
+  // [ ] validate if the foreign keys are valid
   async create({
     name,
     status,
