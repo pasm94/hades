@@ -22,7 +22,6 @@ export class AuthService {
 
   async authenticate(email: string, password: string): Promise<UserData> {
     const user = await this.usersRepository.findOne({ email });
-    console.log(user);
 
     if (!user) {
       throw new HttpException(
