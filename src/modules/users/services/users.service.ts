@@ -21,6 +21,9 @@ export class UsersService {
     private usersRepository: Repository<User>,
   ) {}
 
+  // TO DO
+  // in update method
+  // [ ] all field must be optional, update only submitted fields
   async create({ name, email, password }: CreateUserDto): Promise<void> {
     const userAlreadyExists = await this.usersRepository.findOne({ email });
 
