@@ -49,10 +49,12 @@ export class ProjectsService {
       throw new HttpException('Invalid status!', HttpStatus.BAD_REQUEST);
     }
 
+    const project = await this.findOne(id);
+
     await this.projectsRepository.update(id, {
-      name,
-      status,
-      description,
+      name: name ? name : project.name,
+      status: status ? status : project.status,
+      description: description ? description : project.description,
     });
   }
 
