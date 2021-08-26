@@ -1,9 +1,13 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { getRepository, Repository } from 'typeorm';
+import { Project } from '../projects/entities/project.entity';
+import { User } from '../users/entities/user.entity';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { Task } from './entities/task.entity';
+
+const statusTypes = ['to do', 'doing', 'done'];
 
 @Injectable()
 export class TasksService {
@@ -12,14 +16,6 @@ export class TasksService {
     private taskRepository: Repository<Task>,
   ) {}
 
-  // TO DO
-  // in create method
-  // [ ] prevision_date, started and finished fields does not need to be filled out
-  // [ ] validate if the foreign keys are valid
-
-  // in update method
-  // [ ] all field must be optional, update only submitted fields
-  // [ ] validate if the foreign keys are valid
   async create({
     name,
     status,
@@ -29,6 +25,21 @@ export class TasksService {
     started,
     user_id,
   }: CreateTaskDto): Promise<void> {
+
+    if (!statusTypes.includes(status)) {
+      throw new HttpException('Invalid status!', HttpStatus.BAD_REQUEST);
+    }
+    const taskUserExists = await this.findUser(user_id);
+    const taskProjectExists = await this.findProject(project_id);
+
+    if(!taskUserExists){
+      throw new HttpException('User not found!', HttpStatus.BAD_REQUEST);
+    }
+
+    if(!taskProjectExists){
+      throw new HttpException('Project not found!', HttpStatus.BAD_REQUEST);
+    }
+
     const task = this.taskRepository.create({
       name,
       status,
@@ -67,18 +78,47 @@ export class TasksService {
       project_id,
     }: UpdateTaskDto,
   ): Promise<void> {
+
+    const taskUserExists = user_id ? await this.findUser(user_id) : true;
+    const taskProjectExists = project_id ? await this.findProject(project_id) : true;
+    const isValidStatus = status ? statusTypes.includes(status) : true;
+
+    if (!isValidStatus) {
+      throw new HttpException('Invalid status!', HttpStatus.BAD_REQUEST);
+    }
+
+    if(!taskUserExists){
+      throw new HttpException('User not found!', HttpStatus.BAD_REQUEST);
+    }
+
+    if(!taskProjectExists){
+      throw new HttpException('Project not found!', HttpStatus.BAD_REQUEST);
+    }
+
+    const task = await this.taskRepository.findOne(id);
+
     await this.taskRepository.update(id, {
-      name,
-      status,
-      prevision_date,
-      started,
-      finished,
-      user_id,
-      project_id,
+      name: name ? name : task.name,
+      status: status ? status : task.status,
+      prevision_date: prevision_date ? prevision_date : task.prevision_date,
+      started: started ? started : task.started,
+      finished: finished ? finished : task.finished,
+      user_id: user_id ? user_id : task.user_id,
+      project_id: project_id ? project_id : task.project_id,
     });
   }
 
   async remove(id: number): Promise<void> {
     await this.taskRepository.delete(id);
+  }
+
+  async findUser(id: number): Promise<User>{
+    const user = await getRepository(User).findOne(id);
+    return user;
+  }
+
+  async findProject(id: number): Promise<Project>{
+    const project = await getRepository(Project).findOne(id);
+    return project;
   }
 }
