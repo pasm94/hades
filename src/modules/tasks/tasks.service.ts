@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ProjectsService } from '../projects/projects.service';
+import { User } from '../users/entities/user.entity';
 import { UsersService } from '../users/services/users.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
@@ -15,7 +16,7 @@ export class TasksService {
     @InjectRepository(Task)
     private taskRepository: Repository<Task>,
     private projectsService: ProjectsService,
-    private usersService: UsersService
+    private usersService: UsersService // private readonly usersService: UsersService,
   ) {}
 
   async create({
