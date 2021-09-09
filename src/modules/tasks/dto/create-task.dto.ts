@@ -1,4 +1,4 @@
-import { IsDate, IsIn, IsInt, IsString } from 'class-validator';
+import { IsDate, IsIn, IsInt, IsOptional, IsString, IsDateString } from 'class-validator';
 
 export class CreateTaskDto {
   @IsString()
@@ -7,13 +7,16 @@ export class CreateTaskDto {
   @IsIn(['to do', 'doing', 'done'])
   status: 'to do' | 'doing' | 'done';
 
-  @IsDate()
+  @IsDateString()
+  @IsOptional()
   prevision_date?: Date;
 
-  @IsDate()
+  @IsDateString()
+  @IsOptional()
   started?: Date;
 
-  @IsDate()
+  @IsDateString()
+  @IsOptional()
   finished?: Date;
 
   @IsInt()
