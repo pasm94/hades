@@ -45,7 +45,10 @@ export class ProjectsService {
     id: number,
     { status, description, name }: UpdateProjectDto,
   ): Promise<void> {
-    if (!statusTypes.includes(status)) {
+
+    const isValidStatus = status ? statusTypes.includes(status) : true;
+
+    if (!isValidStatus) {
       throw new HttpException('Invalid status!', HttpStatus.BAD_REQUEST);
     }
 
