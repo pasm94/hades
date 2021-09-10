@@ -6,14 +6,6 @@ import { UpdateUserDto } from '../dto/update-user.dto';
 import { User } from '../entities/user.entity';
 import { hash } from 'bcryptjs';
 
-export interface UserData {
-  user: {
-    name: string;
-    email: string;
-  };
-  token: string;
-}
-
 @Injectable()
 export class UsersService {
   constructor(

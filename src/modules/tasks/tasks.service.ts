@@ -7,8 +7,6 @@ import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { Task } from './entities/task.entity';
 
-const statusTypes = ['to do', 'doing', 'done'];
-
 @Injectable()
 export class TasksService {
   constructor(
@@ -31,10 +29,6 @@ export class TasksService {
     started,
     user_id,
   }: CreateTaskDto): Promise<void> {
-    if (!statusTypes.includes(status)) {
-      throw new HttpException('Invalid status!', HttpStatus.BAD_REQUEST);
-    }
-
     if (user_id) {
       const userExists = await this.userRepository.findOne(user_id);
       if (!userExists) {

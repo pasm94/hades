@@ -1,11 +1,9 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { Project } from './entities/project.entity';
-
-const statusTypes = ['to do', 'doing', 'done'];
 
 @Injectable()
 export class ProjectsService {
@@ -15,10 +13,6 @@ export class ProjectsService {
   ) {}
 
   async create({ name, description, status }: CreateProjectDto): Promise<void> {
-    if (!statusTypes.includes(status)) {
-      throw new HttpException('Invalid status!', HttpStatus.BAD_REQUEST);
-    }
-
     const project = this.projectsRepository.create({
       name,
       description,
