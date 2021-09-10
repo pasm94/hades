@@ -1,9 +1,8 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ProjectsService } from '../projects/projects.service';
+import { Project } from '../projects/entities/project.entity';
 import { User } from '../users/entities/user.entity';
-import { UsersService } from '../users/services/users.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { Task } from './entities/task.entity';
@@ -15,8 +14,12 @@ export class TasksService {
   constructor(
     @InjectRepository(Task)
     private taskRepository: Repository<Task>,
-    private projectsService: ProjectsService,
-    private usersService: UsersService // private readonly usersService: UsersService,
+
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
+
+    @InjectRepository(Project)
+    private projectRepository: Repository<Project>,
   ) {}
 
   async create({
@@ -28,22 +31,19 @@ export class TasksService {
     started,
     user_id,
   }: CreateTaskDto): Promise<void> {
-
     if (!statusTypes.includes(status)) {
       throw new HttpException('Invalid status!', HttpStatus.BAD_REQUEST);
     }
-    
+
     if (user_id) {
-      let usersService: UsersService;
-      const userExists = await usersService.findOne(user_id);
+      const userExists = await this.userRepository.findOne(user_id);
       if (!userExists) {
         throw new HttpException('User not found', HttpStatus.BAD_REQUEST);
       }
     }
 
     if (project_id) {
-      let projectsService: ProjectsService;
-      const userExists = await projectsService.findOne(project_id);
+      const userExists = await this.projectRepository.findOne(project_id);
       if (!userExists) {
         throw new HttpException('Project not found', HttpStatus.BAD_REQUEST);
       }
@@ -75,53 +75,26 @@ export class TasksService {
     return task;
   }
 
-  async update(
-    id: number,
-    {
-      name,
-      status,
-      prevision_date,
-      started,
-      finished,
-      user_id,
-      project_id,
-    }: UpdateTaskDto,
-  ): Promise<void> {
-
-    const isValidStatus = status ? statusTypes.includes(status) : true;
-
-    if (!isValidStatus) {
-      throw new HttpException('Invalid status!', HttpStatus.BAD_REQUEST);
-    }
+  async update(id: number, taskUpdateDto: UpdateTaskDto): Promise<void> {
+    const { user_id, project_id } = taskUpdateDto;
 
     if (user_id) {
-      let usersService: UsersService;
-      const userExists = await usersService.findOne(user_id);
+      const userExists = await this.userRepository.findOne(user_id);
+
       if (!userExists) {
         throw new HttpException('User not found', HttpStatus.BAD_REQUEST);
       }
     }
 
     if (project_id) {
-      let projectsService: ProjectsService;
-      const projectExists = await projectsService.findOne(project_id);
-      console.log(projectExists);
+      const projectExists = await this.projectRepository.findOne(project_id);
+
       if (!projectExists) {
         throw new HttpException('Project not found', HttpStatus.BAD_REQUEST);
       }
     }
 
-    const task = await this.taskRepository.findOne(id);
-
-    await this.taskRepository.update(id, {
-      name: name ? name : task.name,
-      status: status ? status : task.status,
-      prevision_date: prevision_date ? prevision_date : task.prevision_date,
-      started: started ? started : task.started,
-      finished: finished ? finished : task.finished,
-      user_id: user_id ? user_id : task.user_id,
-      project_id: project_id ? project_id : task.project_id,
-    });
+    await this.taskRepository.update(id, taskUpdateDto);
   }
 
   async remove(id: number): Promise<void> {

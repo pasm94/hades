@@ -41,24 +41,8 @@ export class ProjectsService {
     return project;
   }
 
-  async update(
-    id: number,
-    { status, description, name }: UpdateProjectDto,
-  ): Promise<void> {
-
-    const isValidStatus = status ? statusTypes.includes(status) : true;
-
-    if (!isValidStatus) {
-      throw new HttpException('Invalid status!', HttpStatus.BAD_REQUEST);
-    }
-
-    const project = await this.findOne(id);
-
-    await this.projectsRepository.update(id, {
-      name: name ? name : project.name,
-      status: status ? status : project.status,
-      description: description ? description : project.description,
-    });
+  async update(id: number, projectUpdateDto: UpdateProjectDto): Promise<void> {
+    await this.projectsRepository.update(id, projectUpdateDto);
   }
 
   async findByName(name: string): Promise<Project> {

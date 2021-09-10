@@ -54,10 +54,9 @@ export class UsersService {
     return user;
   }
 
-  async update(
-    id: number,
-    { name, email, password }: UpdateUserDto,
-  ): Promise<void> {
+  async update(id: number, userUpdateDto: UpdateUserDto): Promise<void> {
+    const { email, password } = userUpdateDto;
+
     const userAlreadyExists = await this.usersRepository.findOne({ email });
 
     if (userAlreadyExists && userAlreadyExists.id !== id) {
@@ -67,14 +66,12 @@ export class UsersService {
       );
     }
 
-    const passwordHash = password ? await hash(password, 8) : false;
-    const user = await this.usersRepository.findOne(id);
+    if (password) {
+      const passwordHash = await hash(password, 8);
+      userUpdateDto.password = passwordHash;
+    }
 
-    await this.usersRepository.update(id, {
-      name: name ? name : user.name,
-      email: email ? email : user.email,
-      password: passwordHash ? passwordHash : user.password,
-    });
+    await this.usersRepository.update(id, userUpdateDto);
   }
 
   remove(id: number): void {
